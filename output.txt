@@ -1,0 +1,16 @@
+ABCD 
+No Error
+
+
+Operation Code Error
+
+
+Operand Error
+
+
+Time Limit Exceeded
+
+
+Line Limit Exceeded
+
+
