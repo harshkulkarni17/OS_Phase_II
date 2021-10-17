@@ -11,6 +11,9 @@ Operand Error
 Time Limit Exceeded
 
 
+Out of Data
+
+
 Line Limit Exceeded
 
 

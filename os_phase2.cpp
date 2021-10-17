@@ -10,15 +10,18 @@ public:
 class os_phase2
 {
 public:
-    char M[300][4], IR[4], R[4], buffer[40];
+    int index = 0;
+    char M[300][4], IR[4], R[4], buffer[40], temp_buff[4];
     int i, C, IC, VA, RA, PTR, SI = 0, TI = 0, PI = 0, loc, PTE, temp_loc;
     PCB pcb;
     // int time = 0;
     vector<string> EM{"No Error", "Out of Data", "Line Limit Exceeded",
                       "Time Limit Exceeded", "Operation Code Error", "Operand Error", "Invalid Page Fault"};
     vector<int> rnumbers;
+    vector<string> lines;
     ifstream ip_file;
     ofstream op_file;
+    string line;
 
     os_phase2()
     {
@@ -27,6 +30,23 @@ public:
             rnumbers.push_back(i);
         }
     }
+
+    // void lineRead()
+    // {
+
+    //     do
+    //     {
+    //         getline(ip2_file, line);
+    //         if (ip2_file.good())
+    //             lines.push_back(line);
+    //     } while (!ip2_file.eof());
+
+    //     getline(ip2_file, line);
+    //     lines.push_back(line);
+
+    //     for (int i = 0; i < lines.size(); i++)
+    //         cout << lines[i] << endl;
+    // }
 
     int random()
     {
@@ -351,6 +371,12 @@ public:
         {
             cout << "if (SI == 1 && TI == 0)\n";
             Read();
+            cout << buffer[0] << buffer[1] << buffer[2] << buffer[3];
+            if (buffer[0] == '$' && buffer[1] == 'E' && buffer[2] == 'N' && buffer[3] == 'D')
+            {
+                cout << "Out of data error" << endl;
+                Terminate(1);
+            }
         }
         else if (SI == 2 && TI == 0)
         {
@@ -382,7 +408,7 @@ public:
     void allocate()
     {
         cout << "Allocate()" << endl;
-        PTR = 10; // 50
+        PTR = random(); // 50
         cout << "PTR = " << PTR << endl;
         for (int i = PTR; i < PTR + 10; i++)
             for (int j = 0; j < 4; j++)
@@ -414,6 +440,7 @@ public:
         while (!ip_file.eof())
         {
             read();
+            index++;
             cout << "\nBuffer Value - " << endl;
             for (i = 0; i < 40; i++)
                 cout << buffer[i];
@@ -485,6 +512,7 @@ int main()
     os_phase2 obj;
     obj.ip_file.open("input.txt");
     obj.op_file.open("output.txt", ios::out | ios::trunc);
+    // obj.lineRead();
     obj.load();
     obj.ip_file.close();
     obj.op_file.close();
