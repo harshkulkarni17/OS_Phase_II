@@ -228,7 +228,70 @@ public:
             loc = location();
 
             IC++;
-            if (IR[0] == 'G' && IR[1] == 'D')
+
+            if (IR[0] == 'L' && IR[1] == 'R')
+            {
+                cout << "loc = " << loc << endl;
+                pcb.ttc++;
+                if (pcb.ttc > pcb.ttl)
+                {
+                    TI = 2;
+                    MOS();
+                }
+                R[0] = M[loc][0];
+                R[1] = M[loc][1];
+                R[2] = M[loc][2];
+                R[3] = M[loc][3];
+
+                cout << R[0] << R[1] << R[2] << R[3];
+                RA++;
+            }
+
+            else if (IR[0] == 'S' && IR[1] == 'R')
+            {
+                cout << "SR";
+                pcb.ttc += 2;
+                if (pcb.ttc > pcb.ttl)
+                {
+                    TI = 2;
+                    MOS();
+                }
+                M[loc][0] = R[0];
+                M[loc][1] = R[1];
+                M[loc][2] = R[2];
+                M[loc][3] = R[3];
+                RA++;
+            }
+
+            else if (IR[0] == 'C' && IR[1] == 'R')
+            {
+                pcb.ttc++;
+                if (pcb.ttc > pcb.ttl)
+                {
+                    TI = 2;
+                    MOS();
+                }
+                if (R[0] == M[loc][0] && R[1] == M[loc][1] && R[2] == M[loc][2] && R[3] == M[loc][3])
+                    C = 1;
+                else
+                    C = 0;
+                RA++;
+            }
+
+            else if (IR[0] == 'B' && IR[1] == 'T')
+            {
+                pcb.ttc++;
+                if (pcb.ttc > pcb.ttl)
+                {
+                    TI = 2;
+                    MOS();
+                }
+                if (C == 1)
+                    IC = loc;
+                RA++;
+            }
+
+            else if (IR[0] == 'G' && IR[1] == 'D')
             {
                 cout << "if (IR[0] == 'G' && IR[1] == 'D')" << endl;
                 SI = 1;
@@ -242,7 +305,7 @@ public:
                 cout << "| VA\t\t|  " << VA << "\t|" << endl;
                 cout << "-------------------------\n";
                 cout << endl;
-                
+
                 if (!(IR[2] <= 57 && IR[3] <= 57)) // to check oprand error
                 {
                     cout << EM[5] << endl;
@@ -268,7 +331,7 @@ public:
                 if (IR[2] <= 57 && IR[3] <= 57) // to check oprand error
                 {
                     int temp = (IR[2] - '0') * 10 + (IR[3] - '0');
-                    if (temp != VA)
+                    if (M[temp][0] == '*')
                     {
                         cout << EM[6] << endl;
                         PI = 3;
@@ -296,38 +359,6 @@ public:
                 SI = 3;
                 MOS();
             }
-
-            else if (IR[0] == 'L' && IR[1] == 'R')
-             {
-                 R[0] = M[RA][0];
-                 R[1] = M[RA][1];
-                 R[2] = M[RA][2];
-                 R[3] = M[RA][3];
-                 read();
-             }
-
-             else if (IR[0] == 'S' && IR[1] == 'R')
-             {
-                 M[RA][0] = R[0];
-                 M[RA][1] = R[1];
-                 M[RA][2] = R[2];
-                 M[RA][3] = R[3];
-             }
-
-             else if (IR[0] == 'C' && IR[1] == 'R')
-             {
-
-                 if (R[0] == M[RA][0] && R[1] == M[RA][1] && R[2] == M[RA][2] && R[3] == M[RA][3])
-                     C = 1;
-                 else
-                     C = 0;
-             }
-
-             else if (IR[0] == 'B' && IR[1] == 'T')
-             {
-                 if (C == 1)
-                     IC = loc;
-             }
 
             else
             {
@@ -386,7 +417,6 @@ public:
         {
             cout << "if (SI == 1 && TI == 0)\n";
             Read();
-            cout << buffer[0] << buffer[1] << buffer[2] << buffer[3];
             if (buffer[0] == '$' && buffer[1] == 'E' && buffer[2] == 'N' && buffer[3] == 'D')
             {
                 cout << "Out of data error" << endl;
@@ -442,7 +472,7 @@ public:
         pcb.ttc = 0;
         pcb.ttl = (buffer[8] - '0') * 1000 + (buffer[9] - '0') * 100 + (buffer[10] - '0') * 10 + (buffer[11] - '0');
         pcb.tll = (buffer[12] - '0') * 1000 + (buffer[13] - '0') * 100 + (buffer[14] - '0') * 10 + (buffer[15] - '0');
-        
+
         cout << "\n-----------------------------------------" << endl;
         // cout << "\n_______________" << endl;
         cout << "|job id"
@@ -504,7 +534,7 @@ public:
                 // cout << "Control Card"
                 //      << " Temp loc = " << temp_loc * 10 << endl;
                 // int i, j;
-                if (M[temp_loc*10][0] != '*')
+                if (M[temp_loc * 10][0] != '*')
                     temp_loc++;
 
                 for (int i = temp_loc * 10; i < (temp_loc * 10) + 10; i++)
@@ -519,7 +549,6 @@ public:
                     cout << "  |" << endl;
                 }
                 cout << "---------------------" << endl;
-                
             }
         }
     }
