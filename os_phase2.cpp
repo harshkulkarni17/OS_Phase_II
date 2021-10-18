@@ -332,6 +332,7 @@ public:
             else
             {
                 // operation code error
+                //
                 PI = 1;
                 cout << EM[4] << endl;
                 MOS();
