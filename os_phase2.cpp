@@ -153,6 +153,7 @@ public:
 
     void Terminate(int n)
     {
+        cout << "[ Terminate ]";
         if (!op_file.is_open())
         {
             cout << "if(!op_file)" << endl;
@@ -163,12 +164,14 @@ public:
         op_file << '\n';
         for (int i = 0; i < 300; i++)
         {
-            cout << i << ".  ";
+            cout << "| " << i << ".\t|  ";
             for (int j = 0; j < 4; j++)
             {
                 cout << M[i][j] << " ";
             }
-            cout << endl;
+
+            cout << " |" << endl;
+            cout << "---------------------\n";
         }
         op_file.close();
         load();
@@ -204,10 +207,24 @@ public:
             IR[1] = M[RA][1];
             IR[2] = M[RA][2];
             IR[3] = M[RA][3];
-            cout << "IR[0] = " << IR[0] << endl;
-            cout << "IR[1] = " << IR[1] << endl;
-            cout << "IR[2] = " << IR[2] << endl;
-            cout << "IR[3] = " << IR[3] << endl;
+            cout << "---------------------------------" << endl;
+            cout << "|IR[0]"
+                 << "\t"
+                 << "| "
+                 << "IR[1] "
+                 << "| "
+                 << "IR[2] "
+                 << "| "
+                 << "IR[3] "
+                 << "| " << endl;
+            cout << "---------------------------------" << endl;
+            cout << "|  " << IR[0] << "\t"
+                 << "|  " << IR[1] << "\t"
+                 << "|  " << IR[2] << "\t"
+                 << "|  " << IR[3] << "\t"
+                 << "|  " << endl;
+            cout << "---------------------------------" << endl;
+
             loc = location();
 
             IC++;
@@ -216,8 +233,16 @@ public:
                 cout << "if (IR[0] == 'G' && IR[1] == 'D')" << endl;
                 SI = 1;
                 VA = (IR[2] - '0') * 10 + (IR[3] - '0');
-                cout << "IR[2] = " << IR[2] << " IR[3] = " << IR[3] << endl;
-                cout << "VA = " << VA << endl;
+                cout << endl;
+                cout << "-------------------------\n";
+                cout << "| IR[2]\t\t|  " << IR[2] << "\t|" << endl;
+                cout << "-------------------------\n";
+                cout << "| IR[3]\t\t|  " << IR[3] << "\t|" << endl;
+                cout << "-------------------------\n";
+                cout << "| VA\t\t|  " << VA << "\t|" << endl;
+                cout << "-------------------------\n";
+                cout << endl;
+                
                 if (!(IR[2] <= 57 && IR[3] <= 57)) // to check oprand error
                 {
                     cout << EM[5] << endl;
@@ -408,18 +433,36 @@ public:
         M[PTR][2] = temp_loc / 10 + '0';
         M[PTR][3] = temp_loc % 10 + '0';
     }
+
     void pcb_init()
     {
         pcb.job_id = (buffer[4] - '0') * 1000 + (buffer[5] - '0') * 100 + (buffer[6] - '0') * 10 + (buffer[7] - '0');
-        cout << "job id = " << pcb.job_id << endl;
         pcb.llc = 0;
-        cout << "llc = " << pcb.llc << endl;
         pcb.ttc = 0;
-        cout << "ttc = " << pcb.ttc << endl;
         pcb.ttl = (buffer[8] - '0') * 1000 + (buffer[9] - '0') * 100 + (buffer[10] - '0') * 10 + (buffer[11] - '0');
-        cout << "ttl = " << pcb.ttl << endl;
         pcb.tll = (buffer[12] - '0') * 1000 + (buffer[13] - '0') * 100 + (buffer[14] - '0') * 10 + (buffer[15] - '0');
-        cout << "tll = " << pcb.tll << endl;
+        
+        cout << "\n-----------------------------------------" << endl;
+        // cout << "\n_______________" << endl;
+        cout << "|job id"
+             << "\t"
+             << "|  "
+             << "llc\t"
+             << "|  "
+             << "ttc\t"
+             << "|  "
+             << "ttl\t"
+             << "|  "
+             << "tll\t"
+             << "|  " << endl;
+        cout << "-----------------------------------------" << endl;
+        cout << "|" << pcb.job_id << "\t"
+             << "|  " << pcb.llc << "\t"
+             << "|  " << pcb.ttc << "\t"
+             << "|  " << pcb.ttl << "\t"
+             << "|  " << pcb.tll << "\t"
+             << "|  " << endl;
+        cout << "-----------------------------------------" << endl;
     }
 
     void load()
@@ -436,7 +479,7 @@ public:
 
             if (buffer[0] == '$' && buffer[1] == 'A' && buffer[2] == 'M' && buffer[3] == 'J')
             {
-                cout << "init";
+                cout << "Funtion Call [init()]\n";
                 init();
                 pcb_init();
                 allocate();
@@ -444,12 +487,8 @@ public:
 
             else if (buffer[0] == '$' && buffer[1] == 'D' && buffer[2] == 'T' && buffer[3] == 'A')
             {
-                cout << "startExecution()";
+                cout << "Funtion Call [startExecution()]\n";
                 startExecution();
-
-                /*cout << "Job " << z << " : Execution Started" << endl;
-                startExecution();
-                cout << "Job " << z << " : Executed totally" << endl;*/
             }
 
             else if (buffer[0] == '$' && buffer[1] == 'E' && buffer[2] == 'N' && buffer[3] == 'D')
@@ -461,24 +500,25 @@ public:
             else
             {
                 int a = 0;
-                cout << "Control Card"
-                     << " Temp loc = " << temp_loc * 10 << endl;
+                // cout << "Control Card"
+                //      << " Temp loc = " << temp_loc * 10 << endl;
                 // int i, j;
                 if (M[temp_loc*10][0] != '*')
                     temp_loc++;
 
                 for (int i = temp_loc * 10; i < (temp_loc * 10) + 10; i++)
                 {
-                    cout << "Trial" << endl;
-                    cout << "M[" << i << "]: ";
+                    cout << "---------------------" << endl;
+                    cout << "| M[" << i << "] |  ";
                     for (int j = 0; j < 4; j++)
                     {
                         M[i][j] = buffer[a++];
-                        cout << M[i][j] << "  ";
+                        cout << M[i][j] << " ";
                     }
-                    cout << endl;
+                    cout << "  |" << endl;
                 }
-                cout << "\n";
+                cout << "---------------------" << endl;
+                
             }
         }
     }
@@ -486,15 +526,24 @@ public:
     void addressMap(int VA)
     {
         cout << "addressMap(int VA)" << endl;
-        cout << "PTR = " << PTR << endl;
-        cout << "VA = " << VA << endl;
+        cout << "-------------------------\n";
+        cout << "| PTR\t\t|  " << PTR << "\t|" << endl;
+        cout << "-------------------------\n";
+        cout << "| VA\t\t|  " << VA << "\t|" << endl;
+        cout << "-------------------------\n";
         PTE = PTR + VA / 10;
-        cout << "PTE = " << PTE << endl;
+        cout << "| PTE\t\t|  " << PTE << "\t|" << endl;
+        cout << "-------------------------\n";
         int n = (M[PTE][2] - '0') * 10 + (M[PTE][3] - '0');
-        cout << "M[PTE][2] = " << M[PTE][2] << " M[PTE][3] = " << M[PTE][3] << endl;
-        cout << "n = " << n << endl;
+        cout << "| M[PTE][2]\t|  " << M[PTE][2] << "\t|" << endl;
+        cout << "-------------------------\n";
+        cout << "| M[PTE][3]\t|  " << M[PTE][3] << "\t|" << endl;
+        cout << "-------------------------\n";
+        cout << "| n\t\t|  " << n << "\t|" << endl;
+        cout << "-------------------------\n";
         RA = (n * 10) + VA % 10; // 110
-        cout << "RA = " << RA << endl;
+        cout << "| RA\t\t|  " << RA << "\t|" << endl;
+        cout << "-------------------------\n";
     }
 };
 
@@ -503,7 +552,6 @@ int main()
     os_phase2 obj;
     obj.ip_file.open("input.txt");
     obj.op_file.open("output.txt", ios::out | ios::trunc);
-    // obj.lineRead();
     obj.load();
     obj.ip_file.close();
     obj.op_file.close();
