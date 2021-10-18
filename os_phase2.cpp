@@ -31,23 +31,6 @@ public:
         }
     }
 
-    // void lineRead()
-    // {
-
-    //     do
-    //     {
-    //         getline(ip2_file, line);
-    //         if (ip2_file.good())
-    //             lines.push_back(line);
-    //     } while (!ip2_file.eof());
-
-    //     getline(ip2_file, line);
-    //     lines.push_back(line);
-
-    //     for (int i = 0; i < lines.size(); i++)
-    //         cout << lines[i] << endl;
-    // }
-
     int random()
     {
         unsigned seed = chrono::system_clock::now().time_since_epoch().count();
@@ -228,7 +211,6 @@ public:
             loc = location();
 
             IC++;
-            // cout << "XYZ\n";
             if (IR[0] == 'G' && IR[1] == 'D')
             {
                 cout << "if (IR[0] == 'G' && IR[1] == 'D')" << endl;
@@ -236,6 +218,11 @@ public:
                 VA = (IR[2] - '0') * 10 + (IR[3] - '0');
                 cout << "IR[2] = " << IR[2] << " IR[3] = " << IR[3] << endl;
                 cout << "VA = " << VA << endl;
+                if (!(IR[2] <= 57 && IR[3] <= 57)) // to check oprand error
+                {
+                    cout << EM[5] << endl;
+                    PI = 2;
+                }
                 // if (PTE == VA)
                 //     allocate();
                 // addressMap(count);
@@ -285,26 +272,27 @@ public:
                 MOS();
             }
 
-            /* else if (IR[0] == 'L' && IR[1] == 'R')
+            else if (IR[0] == 'L' && IR[1] == 'R')
              {
-                 R[0] = M[loc][0];
-                 R[1] = M[loc][1];
-                 R[2] = M[loc][2];
-                 R[3] = M[loc][3];
+                 R[0] = M[RA][0];
+                 R[1] = M[RA][1];
+                 R[2] = M[RA][2];
+                 R[3] = M[RA][3];
+                 read();
              }
 
              else if (IR[0] == 'S' && IR[1] == 'R')
              {
-                 M[loc][0] = R[0];
-                 M[loc][1] = R[1];
-                 M[loc][2] = R[2];
-                 M[loc][3] = R[3];
+                 M[RA][0] = R[0];
+                 M[RA][1] = R[1];
+                 M[RA][2] = R[2];
+                 M[RA][3] = R[3];
              }
 
              else if (IR[0] == 'C' && IR[1] == 'R')
              {
 
-                 if (R[0] == M[loc][0] && R[1] == M[loc][1] && R[2] == M[loc][2] && R[3] == M[loc][3])
+                 if (R[0] == M[RA][0] && R[1] == M[RA][1] && R[2] == M[RA][2] && R[3] == M[RA][3])
                      C = 1;
                  else
                      C = 0;
@@ -314,7 +302,7 @@ public:
              {
                  if (C == 1)
                      IC = loc;
-             }*/
+             }
 
             else
             {
@@ -347,7 +335,8 @@ public:
         }
         else if (PI == 3 && TI == 0)
         {
-            cout << "Terminate(0)";
+            cout << "else if (PI == 3 && TI == 0)";
+            Terminate(6);
             // More code to be added
         }
         else if (PI == 1 && TI == 2)
@@ -475,6 +464,8 @@ public:
                 cout << "Control Card"
                      << " Temp loc = " << temp_loc * 10 << endl;
                 // int i, j;
+                if (M[temp_loc*10][0] != '*')
+                    temp_loc++;
 
                 for (int i = temp_loc * 10; i < (temp_loc * 10) + 10; i++)
                 {

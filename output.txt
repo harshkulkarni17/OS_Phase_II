@@ -17,3 +17,9 @@ Out of Data
 Line Limit Exceeded
 
 
+Invalid Page Fault
+
+
+Operation Code Error
+
+
