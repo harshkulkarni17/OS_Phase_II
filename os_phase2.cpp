@@ -159,9 +159,42 @@ public:
             cout << "if(!op_file)" << endl;
             op_file.open("output.txt", ios::app);
         }
-        op_file << EM[n] << "\n";
-        op_file << '\n';
-        op_file << '\n';
+        op_file << "-------------------------------------------\n";
+        op_file <<EM[n] << "\n";
+        op_file << "-------------------------------------------\n";
+        op_file << "                    PCB\n";
+        // op_file << "\n-----------------------------------------" << endl;
+        // cout << "\n_______" << endl;
+        op_file << "\t\t\t---------------------\n";
+        op_file << "\t\t\t| job_id\t|  " << pcb.job_id << "\t|" << endl;
+        op_file << "\t\t\t---------------------\n";
+        op_file << "\t\t\t| llc\t\t|  " << pcb.llc << "\t|" << endl;
+        op_file << "\t\t\t---------------------\n";
+        op_file << "\t\t\t| ttc\t\t|  " << pcb.ttc << "\t|" << endl;
+        op_file << "\t\t\t---------------------\n";
+        op_file << "\t\t\t| ttl\t\t|  " << pcb.ttl << "\t|" << endl;
+        op_file << "\t\t\t---------------------\n";
+        op_file << "\t\t\t| tll\t\t|  " << pcb.tll << "\t|" << endl;
+        op_file << "\t\t\t---------------------\n";
+        op_file << "-------------------------------------------\n";
+        op_file << "\t\t\t   Interrupts Status\n";
+        op_file << "\t\t\t   -----------------\n";
+        op_file << "\t\t\t   | SI\t|  " << SI << "\t  |" << endl;
+        op_file << "\t\t\t   -----------------\n";
+        op_file << "\t\t\t   | PI\t|  " << PI << "\t  |" << endl;
+        op_file << "\t\t\t   -----------------\n";
+        op_file << "\t\t\t   | TI\t|  " << TI << "\t  |" << endl;
+        op_file << "\t\t\t   -----------------\n";
+        op_file << "-------------------------------------------\n";
+        // op_file << "\t\t\t   \n";
+        op_file << "\t\t     ----------------------\n";
+        op_file << "\t\t     | PTE\t\t|  " << PTE << "\t  |" << endl;
+        op_file << "\t\t     ----------------------\n";
+        op_file << "\t\t     | IC\t\t|  " << IC << "\t  |" << endl;
+        op_file << "\t\t     ----------------------\n";
+        op_file << "\t\t     | RA\t\t|  " << RA << "\t  |" << endl;
+        op_file << "\t\t     ----------------------\n";
+
         for (int i = 0; i < 300; i++)
         {
             cout << "| " << i << ".\t|  ";
@@ -173,7 +206,9 @@ public:
             cout << " |" << endl;
             cout << "---------------------\n";
         }
+        op_file << "-------------------END--------------------\n";
         op_file.close();
+
         load();
         // exit(0);
     }
@@ -474,7 +509,7 @@ public:
         pcb.tll = (buffer[12] - '0') * 1000 + (buffer[13] - '0') * 100 + (buffer[14] - '0') * 10 + (buffer[15] - '0');
 
         cout << "\n-----------------------------------------" << endl;
-        // cout << "\n_______________" << endl;
+        // cout << "\n_______" << endl;
         cout << "|job id"
              << "\t"
              << "|  "
